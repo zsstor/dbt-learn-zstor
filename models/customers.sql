@@ -35,7 +35,7 @@ final as (
         coalesce(customer_orders.number_of_orders, 0) as number_of_orders,
         lifetime_payments.total as lifetime_value
     from customers
-    left join customer_orders using (customer_id)
-    left join lifetime_payments using (customer_id)
+    left join customer_orders on (customers.customer_id = customer_orders.customer_id)
+    left join lifetime_payments on (customers.customer_id = lifetime_payments.customer_id)
 )
 select * from final
