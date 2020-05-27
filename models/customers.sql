@@ -15,7 +15,7 @@ payments as (
 ),
 lifetime_payments as (
     select customer_id, sum(amount) as total from payments
-)
+),
 customer_orders as (
     select
         customer_id,
