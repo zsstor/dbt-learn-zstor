@@ -1,15 +1,54 @@
 version: 2
 
+sources:
+  - name: jaffle_shop
+    description: simple jaffle shop
+    database: raw
+    tables:
+      - name: orders
+        description: one row per order
+        columns:
+        - name: id
+          tests:
+           - unique
+           - not_null  
+      - name: customers
+        description: one row per customer
+        columns:
+        - name: id
+          tests:
+           - unique
+           - not_null  
+  - name: stripe
+    description: '{{ doc("payment") }}'
+    database: raw
+    freshness: # default freshness
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    loaded_at_field: _batched_at
+
+    tables:
+      - name: payment
+        description: money comes in
+        columns:
+        - name: id
+          tests:
+           - unique
+           - not_null
+
 models:
   - name: customers
+    description: more info for customers, including account stats
     columns:
       - name: customer_id
+        description: inherited from stg_customers
         tests:
           - unique
           - not_null
   - name: stg_customers
     columns:
       - name: customer_id
+        description: this is the unique id for staging customers
         tests:
           - unique
           - not_null
@@ -22,10 +61,8 @@ models:
       - name: amount
         tests:
            - not_null
-    columns:
       - name: customer_id
         tests:
-          - unique
           - not_null
   - name: stg_orders
     columns:
