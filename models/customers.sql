@@ -14,11 +14,11 @@ payments as (
     select * from {{ ref('stg_payments') }}
 ),
 lifetime_payments as (
-    select customer_id, sum(amount) as total from payments
+    select customer_id, sum(amount) as total from payments group by 1
 ),
 customer_orders as (
     select
-        customer_id,
+        orders.customer_id,
         min(order_date) as first_order_date,
         max(order_date) as most_recent_order_date,
         count(order_id) as number_of_orders
